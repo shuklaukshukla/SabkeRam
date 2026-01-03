@@ -1,0 +1,87 @@
+@{
+    Layout = "_Layout";
+}
+
+<div class="container mt-3">
+    <h1 class="text-center">Sundar Kand</h1>
+
+    <div class="controls mb-3">
+        <label for="speedRange">Scroll speed (px/sec):</label>
+        <!-- allow very slow speeds by lowering min; step allows fractional values -->
+        <input type="range" id="speedRange" min="0.5" max="200" value="30" step="0.5" />
+        <span id="speedValue">30</span>
+        <a class="btn btn-secondary btn-sm ms-3" href="/Home/Settings">Settings</a>
+    </div>
+
+    <div id="scrollContainer" style="height:400px; overflow:hidden; position:relative;">
+        <div id="sundarText" style="position:absolute; width:100%; font-size:20px;">
+            <pre id="sundarPre" style="white-space:pre-wrap; font-family: 'Noto Sans Devanagari', 'Mangal', 'Arial Unicode MS'; font-size:22px;">??? ?? ??? ??...</pre>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('scrollContainer');
+            const text = document.getElementById('sundarText');
+            const speedRange = document.getElementById('speedRange');
+            const speedValue = document.getElementById('speedValue');
+
+            // Load saved/default speed from localStorage if present
+            const saved = localStorage.getItem('sundar_speed');
+            if (saved) {
+                speedRange.value = saved;
+                speedValue.textContent = saved;
+            }
+
+            // initialize speed (pixels per second)
+            let speed = parseFloat(speedRange.value);
+            speedRange.addEventListener('input', () => {
+                speed = parseFloat(speedRange.value);
+                speedValue.textContent = speed;
+                // persist preference
+                localStorage.setItem('sundar_speed', speed);
+            });
+
+            let pos = container.clientHeight;
+            text.style.top = pos + 'px';
+
+            // Load text from controller action which returns UTF-8 text
+            const pre = document.getElementById('sundarPre');
+            fetch('/Home/SundarKandText')
+                .then(r => {
+                    if (!r.ok) throw new Error('Not found');
+                    return r.text();
+                })
+                .then(t => {
+                    pre.textContent = t;
+                })
+                .catch(() => {
+                    pre.textContent = '???????? ??? ???? ??? ?????? ????';
+                });
+
+            // Recompute positions on resize
+            window.addEventListener('resize', () => {
+                if (pos > container.clientHeight) pos = container.clientHeight;
+            });
+
+            // Use a time-based animation so speed is pixels-per-second and very small
+            let lastTs = null;
+            function step(ts) {
+                if (!lastTs) lastTs = ts;
+                const delta = (ts - lastTs) / 1000; // seconds elapsed
+                lastTs = ts;
+
+                // move by speed (px/sec) * deltaSeconds
+                pos -= speed * delta;
+
+                if (pos < -text.clientHeight) pos = container.clientHeight;
+                text.style.top = pos + 'px';
+                requestAnimationFrame(step);
+            }
+
+            requestAnimationFrame(step);
+        });
+    </script>
+}
