@@ -590,9 +590,7 @@
 
                         <!-- removed desktop color label; keep only the color toggle button (no native color picker) -->
                         <button id="colorControl" class="form-control-color btn-color me-3" type="button" aria-label="Toggle colors" title="Toggle background/text colors"></button>
-                        <label class="header-label mb-0 me-2">Jump</label>
-                        <input type="number" id="dohaInput" class="form-control me-2 doha-input" style="width:90px;" min="1" placeholder="Doha #">
-                        <button id="dohaGoBtn" class="btn btn-outline-warning btn-toggle-small me-3" aria-label="Jump to Doha">Go</button>
+                        <!-- Jump to Doha removed for this page -->
                     </div>
 
                     <!-- Mobile layout: stacked rows with label left, slider center and control on right -->
@@ -610,12 +608,7 @@
                                 <button id="colorControl_mobile" class="form-control-color btn-color" type="button" aria-label="Toggle colors mobile" title="Toggle background/text colors"></button>
                             </div>
                         </div>
-                        <div class="control-row d-flex align-items-center">
-                            <div class="control-mid d-flex align-items-center">
-                                <input type="number" id="dohaInput_mobile" class="form-control mx-2 doha-input" min="1" placeholder="Doha #">
-                                <button id="dohaGoBtn_mobile" class="btn btn-outline-warning btn-toggle-small" aria-label="Jump to Doha mobile">▶</button>
-                            </div>
-                        </div>
+                        <!-- mobile Jump to Doha removed for this page -->
                     </div>
                 </div>
             </div>
@@ -822,8 +815,17 @@
         const toggleScrollBtn = document.getElementById('toggleScroll');
         const toggleIcon = document.getElementById('toggleIcon');
         const container = document.querySelector('.container');
-        // start text just below the visible viewport of the scrolling area
-        let scrollPos = container.clientHeight;
+// compute initial text position so the content area is filled (show top when content taller,
+// center when content shorter than viewport)
+function computeInitialScrollPos() {
+    if (!container || !text) return 0;
+    const txtH = text.offsetHeight;
+    const viewH = container.clientHeight;
+    if (txtH >= viewH) return 0; // show from top when content taller
+    return Math.round((viewH - txtH) / 2); // center when shorter so viewport appears filled
+}
+
+let scrollPos = computeInitialScrollPos();
         // speed is pixels per second
         const savedSpeed = localStorage.getItem('sundar_speed');
         // parse saved speed safely and fallback to control default (80)
@@ -835,9 +837,10 @@
             const p = parseFloat(speedControl.value);
             if (!isNaN(p) && p > 0) speed = p;
         }
-        // ensure control reflects the actual speed (if present)
-        if (speedControl) speedControl.value = speed;
-        let isRunning = true;
+// ensure control reflects the actual speed (if present)
+if (speedControl) speedControl.value = speed;
+// auto-scroll OFF by default for this page
+let isRunning = false;
         let rafId = null;
 
         // --- color initialization / persistence ---
@@ -1100,8 +1103,8 @@
 
         // toggle scrolling using icon (play ▶ / pause ⏸)
         if (toggleIcon) toggleIcon.textContent = isRunning ? '⏸' : '▶';
-        // when starting, ensure manual handlers are disabled
-        disableManualScroll();
+        // when starting, enable/disable manual handlers depending on running state
+        if (isRunning) disableManualScroll(); else enableManualScroll();
         toggleScrollBtn.addEventListener('click', function () {
             if (isRunning) {
                 // pause
@@ -1137,125 +1140,23 @@
             }
             text.style.transform = `translateY(${scrollPos}px)`;
 
-            // update doha input while scrolling (throttle to animation frames)
-            try { updateCurrentDoha(); } catch (e) { /* ignore */ }
+            // no doha/jump feature on this page
 
             rafId = requestAnimationFrame(scrollUp);
         }
 
-        // start animation after fonts/layout stabilizes
-        rafId = requestAnimationFrame(scrollUp);
+// ensure initial position is applied after fonts/layout stabilize
+window.addEventListener('load', function () {
+    try {
+        scrollPos = computeInitialScrollPos();
+        updateTransform();
+    } catch (e) { /* ignore */ }
+});
 
-        // --- Doha index and jump support ---
-        let dohaIndex = {};
-        let dohaNodes = []; // ordered NodeList -> Array
+// start animation after fonts/layout stabilizes
+rafId = requestAnimationFrame(scrollUp);
 
-        function buildDohaIndex() {
-            const index = {};
-            const nodes = Array.from(document.querySelectorAll('#scrollText .doha'));
-            dohaNodes = nodes;
-            nodes.forEach((el, i) => {
-                const key = el.getAttribute('data-doha') || String(i + 1);
-                if (!index[key]) index[key] = el;
-            });
-            return index;
-        }
-
-        function jumpToDoha(n) {
-            if (!n) return;
-            // ensure index is fresh
-            try { dohaIndex = buildDohaIndex(); } catch (e) { /* ignore */ }
-            const num = parseInt(String(n).trim(), 10);
-            if (isNaN(num)) return;
-            const key = String(num);
-            let el = dohaIndex[key] || document.querySelector('#scrollText .doha[data-doha="' + key + '"]');
-            if (!el) {
-                alert('Doha ' + n + ' not found');
-                return;
-            }
-
-            // compute element position inside the scrolling content using offsetTop
-            // visualTop = scrollPos + el.offsetTop; we want visualTop ~= center of container
-            const elOffset = el.offsetTop;
-            const elHeight = el.offsetHeight || 0;
-            const desiredVisualTop = Math.round(container.clientHeight / 2 - elHeight / 2);
-            const desiredScrollPos = desiredVisualTop - elOffset;
-            scrollPos = clampScrollPos(desiredScrollPos);
-            // apply immediately
-            updateTransform();
-            // update inputs to reflect new current doha
-            updateCurrentDoha();
-        }
-
-        // build index when DOM is ready
-        window.addEventListener('load', function () {
-            try { dohaIndex = buildDohaIndex(); } catch (e) { /* ignore */ }
-        });
-
-        // update the doha input fields with the doha currently centered in the viewport
-        function updateCurrentDoha() {
-            if (!dohaNodes || dohaNodes.length === 0) return;
-            // compute center line within container
-            const centerY = -scrollPos + (container.clientHeight / 2);
-            let foundKey = null;
-            for (let i = 0; i < dohaNodes.length; i++) {
-                const el = dohaNodes[i];
-                const top = el.offsetTop;
-                const bottom = top + el.offsetHeight;
-                if (centerY >= top && centerY <= bottom) {
-                    foundKey = el.getAttribute('data-doha') || String(i + 1);
-                    break;
-                }
-            }
-            if (!foundKey) {
-                // fallback: nearest element by distance to center
-                let best = { key: null, dist: Infinity };
-                for (let i = 0; i < dohaNodes.length; i++) {
-                    const el = dohaNodes[i];
-                    const centerEl = el.offsetTop + (el.offsetHeight / 2);
-                    const d = Math.abs(centerY - centerEl);
-                    if (d < best.dist) best = { key: el.getAttribute('data-doha') || String(i + 1), dist: d };
-                }
-                foundKey = best.key;
-            }
-
-            if (foundKey) {
-                const desktopInput = document.getElementById('dohaInput');
-                const mobileInput = document.getElementById('dohaInput_mobile');
-                if (desktopInput) desktopInput.value = foundKey;
-                if (mobileInput) mobileInput.value = foundKey;
-            }
-        }
-
-
-
-        // wire up controls
-        const dohaInput = document.getElementById('dohaInput');
-        const dohaGoBtn = document.getElementById('dohaGoBtn');
-        const dohaInputMobile = document.getElementById('dohaInput_mobile');
-        const dohaGoBtnMobile = document.getElementById('dohaGoBtn_mobile');
-
-        if (dohaGoBtn && dohaInput) {
-            dohaGoBtn.addEventListener('click', function () {
-                jumpToDoha(dohaInput.value);
-            });
-            dohaInput.addEventListener('keydown', function (e) {
-                if (e.key === 'Enter') jumpToDoha(this.value);
-            });
-        }
-
-        if (dohaGoBtnMobile && dohaInputMobile) {
-            dohaGoBtnMobile.addEventListener('click', function () {
-                if (dohaInput) dohaInput.value = dohaInputMobile.value;
-                jumpToDoha(dohaInputMobile.value);
-            });
-            dohaInputMobile.addEventListener('keydown', function (e) {
-                if (e.key === 'Enter') {
-                    if (dohaInput) dohaInput.value = this.value;
-                    jumpToDoha(this.value);
-                }
-            });
-        }
+        // Doha/jump-to-doha removed for this page
     </script>
 
     <!-- Bootstrap JS bundle -->
