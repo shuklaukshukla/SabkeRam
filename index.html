@@ -23,13 +23,25 @@
     .header { text-align:center; margin-bottom:2rem; }
     .brand { font-size:2rem; font-weight:700; color:var(--accent); letter-spacing:1px; }
     .separator { color:rgba(0,0,0,0.45); margin-top:0.5rem; }
-    .card-link { text-decoration:none; }
-    .card { border:1px solid rgba(0,0,0,0.04); }
-    .card:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(255,153,51,0.08); }
+    .card-link { text-decoration:none; display:block; color:inherit; height:100%; }
+    .card {
+      background:#ffffff;
+      border:2px solid rgba(255,111,0,0.28); /* stronger saffron-tinted border */
+      border-radius:0.65rem;
+      overflow:hidden;
+      transition:transform .18s ease, box-shadow .18s ease, border-color .12s ease;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+      display:flex; flex-direction:column; height:100%;
+    }
+    .card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(255,153,51,0.12); border-color: rgba(255,111,0,0.45); }
     .btn-accent {
       background: linear-gradient(90deg,var(--accent),var(--accent-dark));
       color:#fff; border:0; padding:0.45rem 1rem; border-radius:0.35rem;
     }
+    .card-body { padding:1.25rem; display:flex; flex-direction:column; }
+    .card-title { margin-bottom:0.5rem; }
+    .card-text { margin-bottom:0.75rem; }
+    .btn-accent { margin-top:auto; }
     .btn-accent:focus { box-shadow:0 0 0 0.2rem rgba(255,153,51,0.2); }
     .center-box { max-width:720px; margin:0 auto; }
     .footer { text-align:center; font-size:0.9rem; color:#666; margin-top:2rem; }
@@ -51,7 +63,7 @@
             <div class="card-body">
               <h5 class="card-title">सुंदरकाण्ड</h5>
               <p class="card-text">हनुमान जी की कथा — शक्ति, भक्ति और साहस की प्रेरणा।</p>
-              <button class="btn btn-accent">खोजें</button>
+              <button class="btn btn-accent">पढें</button>
             </div>
           </div>
         </a>
@@ -71,7 +83,7 @@
     </div>
 
     <footer class="footer">
-      <small>© 2026 — सरल भजन संग्रह</small>
+        <small>© 2026 — सबके राम </small>
     </footer>
   </div>
 
