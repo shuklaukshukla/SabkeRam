@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>श्री हनुमान चालीसा</title>
+
+    <!-- Google Devanagari Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            /* fill entire page with bhagwa (saffron) color */
+            background-color: #FF6F00;
+            /* main text color: green (as requested) */
+            color: #006400;
+            font-family: "Noto Serif Devanagari", serif;
+        }
+
+        /* Compact inline header layout on small screens: show mobile controls in a single row */
+        @media (max-width: 480px) {
+            .controls-mobile {
+                display: flex !important;
+                flex-direction: row;
+                align-items: center;
+                gap: 8px;
+                padding: 6px 0;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+                .controls-mobile .control-row {
+                    display: flex;
+                    flex-direction: column;
+                    padding: 0;
+                    border-bottom: none;
+                    margin: 0;
+                    min-width: 0;
+                }
+
+                    .controls-mobile .control-row .header-label {
+                        font-size: 13px;
+                        padding-left: 0;
+                        width: auto;
+                    }
+
+            .controls-mobile .control-mid {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            /* place Play/pause button compactly */
+            .controls-mobile .btn-toggle-small {
+                width: 15px;
+                height: 15px;
+                padding: 4px;
+                border-radius: 6px;
+                font-size: 18px;
+                box-sizing: border-box;
+            }
+
+                /* Color toggle button - same size as play/pause button */
+                .controls-mobile .form-control-color {
+                    width: 20px !important;
+                    height: 20px !important;
+                    padding: 2px;
+                    border-radius: 4px;
+                    box-sizing: border-box;
+                    flex-shrink: 0;
+                    border: 1px solid rgba(0,0,0,0.2);
+                }
+
+            /* make the jump input look like the screenshot: small rounded white box */
+            header input.doha-input {
+                width: 50px !important;
+                font-size: 13px !important;
+                padding: 6px 8px !important;
+                height: 34px !important;
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: none;
+            }
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            /* dark bhagwa header so it reads with black text */
+            background-color: #CC5200; /* dark bhagwa */
+            padding: 10px 16px;
+            z-index: 1000;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.6);
+        }
+
+            header .header-label {
+                font-size: 14px;
+                /* header text should be black on the bhagwa background */
+                color: #000;
+                margin-right: 6px;
+                display: inline-flex;
+                align-items: center;
+                height: 22px;
+                line-height: 1;
+            }
+
+            header input[type="range"] {
+                width: 220px;
+                vertical-align: middle;
+                margin-left: 8px;
+                align-self: center;
+            }
+
+            /* smaller compact input used for Doha jump number fields */
+            header input.doha-input {
+                width: 40px !important;
+                font-size: 10px !important;
+                padding: 4px 6px !important;
+                height: 24px !important;
+                line-height: 1 !important;
+            }
+
+        @media (max-width: 480px) {
+            header input.doha-input {
+                width: 64px !important;
+                font-size: 13px !important;
+            }
+        }
+
+        header .form-control-color {
+            width: 20px;
+            height: 20px;
+            padding: 2px;
+            border-radius: 4px;
+            border: 1px solid rgba(0,100,0,0.18);
+            box-shadow: 0 1px 1px rgba(0,0,0,0.12) inset;
+            cursor: pointer;
+            vertical-align: middle;
+            -webkit-appearance: none;
+            appearance: none;
+            box-sizing: border-box;
+        }
+
+        /* compact icon button for play/pause: show only the glyph (no yellow square) */
+        header .btn-toggle-small {
+            /* keep small touch target but let the button size to its content (the icon) */
+            padding: 4px 6px !important;
+            width: auto !important;
+            height: auto !important;
+            min-width: 0 !important;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            font-size: 18px;
+            line-height: 1;
+            /* remove yellow background and border so only the black glyph is visible */
+            background: transparent !important;
+            color: #000 !important;
+            border: none !important;
+            box-shadow: none !important;
+            box-sizing: border-box;
+            vertical-align: middle;
+        }
+
+        header #toggleIcon {
+            display: inline-block;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        /* normalize bootstrap button inner spacing */
+        header .btn-toggle-small > * {
+            margin: 0;
+            padding: 0;
+            line-height: 1;
+        }
+
+        /* color input: ensure swatch matches desired size */
+        header input[type="color"] {
+            padding: 0;
+            border: none;
+            background: transparent;
+            -webkit-appearance: none;
+            appearance: none;
+            box-sizing: border-box;
+        }
+
+            header input[type="color"]::-webkit-color-swatch-wrapper {
+                padding: 0;
+            }
+
+            header input[type="color"]::-webkit-color-swatch {
+                border-radius: 4px;
+                border: 1px solid rgba(0,100,0,0.18);
+                box-shadow: 0 1px 1px rgba(0,0,0,0.12) inset;
+                width: 22px;
+                height: 22px;
+            }
+
+        header .btn-toggle-small:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0,100,0,0.06);
+        }
+
+        header .btn-toggle-small:hover {
+            /* subtle hover feedback without changing to yellow */
+            background: rgba(0,0,0,0.06);
+        }
+
+
+        /* ensure all header controls are vertically centered across breakpoints
+               and use a consistent gap between controls instead of relying on
+               individual margin utilities. Reset child margins so gap governs spacing. */
+        header .d-flex.flex-wrap.align-items-center {
+            align-items: center !important;
+            gap: 12px;
+        }
+
+            /* remove per-control margins so the flex gap provides consistent spacing */
+            header .d-flex.flex-wrap.align-items-center > * {
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+            }
+
+        /* consistent paddings for controls to improve touch targets and visual rhythm */
+        header .header-label {
+            padding: 0 6px;
+        }
+
+        header .btn-toggle-small {
+            padding: 0 !important;
+        }
+
+        header input.form-range {
+            padding: 4px 0;
+            margin: 0;
+        }
+
+        header .form-control-color {
+            padding: 2px;
+        }
+
+        /* default range thumb/track styling (cross-browser) */
+        header input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #1976d2;
+            border: 2px solid rgba(0,0,0,0.18);
+            margin-top: -5px; /* visually center the thumb on the track */
+        }
+
+        header input[type="range"]::-webkit-slider-runnable-track {
+            height: 6px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 4px;
+        }
+
+        header input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #1976d2;
+            border: 2px solid rgba(0,0,0,0.18);
+        }
+
+        /* make label text vertically centered with the control heights */
+        header .header-label {
+            height: 22px;
+            line-height: 22px;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        /* normalize range and color inputs to center in flex containers */
+        header input.form-range,
+        header input[type="range"] {
+            height: 6px; /* thinner track for visual alignment */
+            padding: 0;
+            margin-top: 0;
+            margin-bottom: 0;
+            align-self: center;
+            vertical-align: middle;
+        }
+
+        header .form-control-color,
+        header .btn-toggle-small {
+            align-self: center;
+            vertical-align: middle;
+        }
+
+        .container {
+            height: 100vh;
+            overflow: hidden;
+            padding-top: 92px; /* leave space for fixed header */
+        }
+
+        /* viewport that shows the bhagwa (saffron) background. This stays static and
+           fully filled on load so only the inner text scrolls. */
+        .scroll-viewport {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            background-color: #FF6F00; /* bhagwa */
+            /* ensure viewport fills available space inside .container */
+            height: 100%;
+            overflow: hidden;
+            box-sizing: border-box;
+            padding: 0 16px 60px;
+        }
+
+        .scroll-text {
+            width: 100%;
+            max-width: 980px;
+            margin: auto;
+            font-size: 22px; /* base, JS can override */
+            line-height: 1.9;
+            text-align: center;
+            position: relative;
+            /* text should be green on the bhagwa background */
+            color: #006400;
+            /* preserve newline characters from the source text */
+            white-space: pre-line;
+            will-change: transform;
+            /* inner content is positioned within the viewport; padding handled by viewport */
+            padding: 0;
+        }
+
+        /* responsive adjustments */
+        @media (max-width: 768px) {
+            header input[type="range"] {
+                width: 160px;
+            }
+
+            .scroll-text {
+                font-size: 18px;
+                line-height: 1.8;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 10px 10px;
+            }
+
+                header input[type="range"] {
+                    width: 120px;
+                    height: 28px;
+                }
+
+                    /* reduce slider thumb size on small screens for better proportions */
+                    header input[type="range"]::-webkit-slider-thumb {
+                        width: 12px;
+                        height: 12px;
+                        margin-top: -3px;
+                    }
+
+                    header input[type="range"]::-moz-range-thumb {
+                        width: 12px;
+                        height: 12px;
+                    }
+
+                    /* Remove left margin from range inputs on mobile so they start from left edge */
+                    header input[type="range"] {
+                        margin-left: 0;
+                    }
+
+            .scroll-text {
+                font-size: 16px;
+                line-height: 1.7;
+                padding: 0 10px 60px;
+            }
+            /* mobile stacked control rows */
+            .controls-mobile .control-row {
+                padding: 10px 6px;
+                border-bottom: 1px solid rgba(255,255,255,0.03);
+            }
+
+            .controls-mobile .header-label {
+                width: 36%;
+                padding-left: 6px;
+                font-size: 16px;
+            }
+
+            .controls-mobile .control-mid {
+                width: 64%;
+            }
+
+            /* ensure the mobile sliders use the smaller thumb defined earlier */
+            .controls-mobile input.form-range {
+                width: 100%;
+                height: auto;
+            }
+
+            /* hide desktop controls on mobile (we added mobile-specific inputs) */
+            .controls-desktop {
+                display: none !important;
+            }
+            /* show mobile controls and arrange them in a single compact row */
+            .controls-mobile {
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center;
+                gap: 6px;
+                padding: 6px 4px;
+                width: 100%;
+                box-sizing: border-box;
+                flex-wrap: nowrap;
+            }
+
+                /* each control-row becomes an inline group so all controls fit in one line */
+                .controls-mobile .control-row {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    padding: 0;
+                    border-bottom: none;
+                    margin: 0;
+                    min-width: 0;
+                    height: 34px;
+                }
+
+                /* hide textual labels on very small screens to save space (icons and inputs are accessible) */
+                .controls-mobile .header-label {
+                    display: none;
+                }
+
+                .controls-mobile .control-mid {
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                    height: 34px;
+                }
+
+                /* compact ranges and buttons for mobile */
+                .controls-mobile input.form-range {
+                    width: 70px;
+                    margin: 0;
+                    height: 6px;
+                    align-self: center;
+                }
+
+                .controls-mobile .btn-toggle-small {
+                    width: 34px;
+                    height: 34px;
+                    padding: 0;
+                    border-radius: 6px;
+                    font-size: 18px;
+                    box-sizing: border-box;
+                    flex-shrink: 0;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: transparent !important;
+                    color: #000 !important;
+                    border: none !important;
+                }
+
+                .controls-mobile .form-control-color {
+                    width: 20px !important;
+                    height: 20px !important;
+                    padding: 2px;
+                    border-radius: 4px;
+                    box-sizing: border-box;
+                    flex-shrink: 0;
+                    border: 1px solid rgba(0,0,0,0.2);
+                    margin-top: -5px;
+                }
+
+                .controls-mobile input.doha-input {
+                    width: 45px !important;
+                    padding: 4px 6px !important;
+                    height: 34px !important;
+                    background: #fff;
+                    border-radius: 6px;
+                    box-shadow: none;
+                    font-size: 13px;
+                    border: 1px solid rgba(0,0,0,0.2);
+                }
+
+                /* Mobile Go button - icon style matching other buttons */
+                .controls-mobile #dohaGoBtn_mobile {
+                    width: 34px;
+                    height: 34px;
+                    padding: 0;
+                    border-radius: 6px;
+                    font-size: 18px;
+                    box-sizing: border-box;
+                    flex-shrink: 0;
+                    background: transparent !important;
+                    color: #000 !important;
+                    border: none !important;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+            /* reduce header height so it doesn't take too much vertical space */
+            header {
+                padding: 6px 8px;
+            }
+
+            /* reduce container top padding to match smaller header */
+            .container {
+                padding-top: 60px; /* smaller space for header on mobile */
+            }
+
+            /* Ensure mobile controls fit in single compact row */
+            .controls-mobile .control-mid input.form-range {
+                margin: 0 2px;
+            }
+
+           
+        }
+
+        /* Header collapsed/expanded support */
+        header.collapsed {
+            padding-top: 6px !important;
+            padding-bottom: 6px !important;
+        }
+
+            header.collapsed .controls-desktop,
+            header.collapsed .controls-mobile {
+                display: none !important;
+            }
+
+        /* body class used to adjust page spacing when header hidden */
+        body.header-collapsed .container {
+            padding-top: 56px; /* reduce space when header is hidden */
+        }
+
+        /* small toggle button styling - no background, just arrow icon */
+        #headerToggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            background: transparent;
+            border: none;
+            color: #000;
+            position: fixed;
+            right: 8px;
+            top: 8px;
+            font-size: 20px;
+            z-index: 1100;
+            cursor: pointer;
+        }
+
+            #headerToggle:hover {
+                opacity: 0.7;
+            }
+
+        /* Doha input: center text and remove native number spinners */
+        header input.doha-input {
+            text-align: center;
+            -moz-appearance: textfield; /* Firefox */
+        }
+
+            header input.doha-input::-webkit-outer-spin-button,
+            header input.doha-input::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="container-fluid">
+            <div class="d-flex flex-column flex-md-row align-items-center justify-content-between">
+                <div class="d-flex flex-wrap align-items-center" style="flex:1 1 auto;">
+                    <!-- Desktop: controls inline via existing markup. For mobile we use the .controls-mobile block below. -->
+                    <div class="controls-desktop d-none d-md-flex align-items-center">
+                        <label class="header-label mb-0 me-2 d-flex align-items-center">Speed</label>
+                        <!-- speed in pixels per second; wider range and higher default for visible movement -->
+                        <input class="form-range me-3" type="range" min="0.1" max="500" step="0.5" value="120" id="speedControl">
+                        <button id="toggleScroll" class="btn btn-outline-warning btn-toggle-small me-3" aria-label="Play/Pause"><span id="toggleIcon">⏸</span></button>
+
+                        <label class="header-label mb-0 me-2">Size</label>
+                        <input class="form-range me-3" type="range" min="14" max="48" value="22" id="fontSizeControl">
+
+                        <!-- removed desktop color label; keep only the color toggle button (no native color picker) -->
+                        <button id="colorControl" class="form-control-color btn-color me-3" type="button" aria-label="Toggle colors" title="Toggle background/text colors"></button>
+                        <label class="header-label mb-0 me-2">Jump</label>
+                        <input type="number" id="dohaInput" class="form-control me-2 doha-input" style="width:90px;" min="1" placeholder="Doha #">
+                        <button id="dohaGoBtn" class="btn btn-outline-warning btn-toggle-small me-3" aria-label="Jump to Doha">Go</button>
+                    </div>
+
+                    <!-- Mobile layout: stacked rows with label left, slider center and control on right -->
+                    <div class="controls-mobile d-flex d-md-none flex-row w-100 align-items-center">
+                        <div class="control-row d-flex align-items-center">
+                            <div class="control-mid d-flex align-items-center">
+                                <input class="form-range mx-2" type="range" min="0.1" max="500" step="0.5" value="120" id="speedControl_mobile">
+                                <button id="toggleScroll_mobile" class="btn btn-outline-warning btn-toggle-small" aria-label="Play/Pause-mobile"><span class="toggle-icon">⏸</span></button>
+                            </div>
+                        </div>
+
+                        <div class="control-row d-flex align-items-center">
+                            <div class="control-mid d-flex align-items-center">
+                                <input class="form-range mx-2" type="range" min="14" max="48" value="22" id="fontSizeControl_mobile">
+                                <button id="colorControl_mobile" class="form-control-color btn-color" type="button" aria-label="Toggle colors mobile" title="Toggle background/text colors"></button>
+                            </div>
+                        </div>
+                        <div class="control-row d-flex align-items-center">
+                            <div class="control-mid d-flex align-items-center">
+                                <input type="number" id="dohaInput_mobile" class="form-control mx-2 doha-input" min="1" placeholder="Doha #">
+                                <button id="dohaGoBtn_mobile" class="btn btn-outline-warning btn-toggle-small" aria-label="Jump to Doha mobile">▶</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- collapse/expand header toggle - fixed to top right -->
+        <!--<button id="headerToggle" class="btn btn-sm" title="Hide header" aria-pressed="false" aria-label="Show or hide header">
+            <span class="toggle-arrow">▼</span>
+        </button>-->
+    </header>
+
+    <div class="container">
+        <div class="scroll-viewport">
+            <div class="scroll-text" id="scrollText">
+
+                <h2>श्री हनुमान चालीसा</h2>
+                दोहा :
+
+                श्रीगुरु चरन सरोज रज, निज मनु मुकुरु सुधारि।
+                बरनऊं रघुबर बिमल जसु, जो दायकु फल चारि।।
+                बुद्धिहीन तनु जानिके, सुमिरौं पवन-कुमार।
+                बल बुद्धि बिद्या देहु मोहिं, हरहु कलेस बिकार।।
+                <div class="doha" data-doha="1">
+                    जय हनुमान ज्ञान गुन सागर।
+                    जय कपीस तिहुं लोक उजागर।।
+
+                    रामदूत अतुलित बल धामा।
+                    अंजनि-पुत्र पवनसुत नामा।।
+
+                    महाबीर बिक्रम बजरंगी।
+                    कुमति निवार सुमति के संगी।।
+
+                    कंचन बरन बिराज सुबेसा।
+                    कानन कुंडल कुंचित केसा।।
+
+                    हाथ बज्र औ ध्वजा बिराजै।
+                    कांधे मूंज जनेऊ साजै।
+
+                    संकर सुवन केसरीनंदन।
+                    तेज प्रताप महा जग बन्दन।।
+
+                    विद्यावान गुनी अति चातुर।
+                    राम काज करिबे को आतुर।।
+
+                    प्रभु चरित्र सुनिबे को रसिया।
+                    राम लखन सीता मन बसिया।।
+
+                    सूक्ष्म रूप धरि सियहिं दिखावा।
+                    बिकट रूप धरि लंक जरावा।।
+
+                    भीम रूप धरि असुर संहारे।
+                    रामचंद्र के काज संवारे।।
+
+                    लाय सजीवन लखन जियाये।
+                    श्रीरघुबीर हरषि उर लाये।।
+
+                    रघुपति कीन्ही बहुत बड़ाई।
+                    तुम मम प्रिय भरतहि सम भाई।।
+
+                    सहस बदन तुम्हरो जस गावैं।
+                    अस कहि श्रीपति कंठ लगावैं।।
+
+                    सनकादिक ब्रह्मादि मुनीसा।
+                    नारद सारद सहित अहीसा।।
+
+                    जम कुबेर दिगपाल जहां ते।
+                    कबि कोबिद कहि सके कहां ते।।
+
+                    तुम उपकार सुग्रीवहिं कीन्हा।
+                    राम मिलाय राज पद दीन्हा।।
+
+                    तुम्हरो मंत्र बिभीषन माना।
+                    लंकेस्वर भए सब जग जाना।।
+
+                    जुग सहस्र जोजन पर भानू।
+                    लील्यो ताहि मधुर फल जानू।।
+
+                    प्रभु मुद्रिका मेलि मुख माहीं।
+                    जलधि लांघि गये अचरज नाहीं।।
+
+                    दुर्गम काज जगत के जेते।
+                    सुगम अनुग्रह तुम्हरे तेते।।
+
+                    राम दुआरे तुम रखवारे।
+                    होत न आज्ञा बिनु पैसारे।।
+
+                    सब सुख लहै तुम्हारी सरना।
+                    तुम रक्षक काहू को डर ना।।
+
+                    आपन तेज सम्हारो आपै।
+                    तीनों लोक हांक तें कांपै।।
+
+                    भूत पिसाच निकट नहिं आवै।
+                    महाबीर जब नाम सुनावै।।
+
+                    नासै रोग हरै सब पीरा।
+                    जपत निरंतर हनुमत बीरा।।
+
+                    संकट तें हनुमान छुड़ावै।
+                    मन क्रम बचन ध्यान जो लावै।।
+
+                    सब पर राम तपस्वी राजा।
+                    तिन के काज सकल तुम साजा।
+
+                    और मनोरथ जो कोई लावै।
+                    सोइ अमित जीवन फल पावै।।
+
+                    चारों जुग परताप तुम्हारा।
+                    है परसिद्ध जगत उजियारा।।
+
+                    साधु-संत के तुम रखवारे।
+                    असुर निकंदन राम दुलारे।।
+
+                    अष्ट सिद्धि नौ निधि के दाता।
+                    अस बर दीन जानकी माता।।
+
+                    राम रसायन तुम्हरे पासा।
+                    सदा रहो रघुपति के दासा।।
+
+                    तुम्हरे भजन राम को पावै।
+                    जनम-जनम के दुख बिसरावै।।
+
+                    अन्तकाल रघुबर पुर जाई।
+                    जहां जन्म हरि-भक्त कहाई।।
+
+                    और देवता चित्त न धरई।
+                    हनुमत सेइ सर्ब सुख करई।।
+
+                    संकट कटै मिटै सब पीरा।
+                    जो सुमिरै हनुमत बलबीरा।।
+
+                    जै जै जै हनुमान गोसाईं।
+                    कृपा करहु गुरुदेव की नाईं।।
+
+                    जो सत बार पाठ कर कोई।
+                    छूटहि बंदि महा सुख होई।।
+
+                    जो यह पढ़ै हनुमान चालीसा।
+                    होय सिद्धि साखी गौरीसा।।
+
+                    तुलसीदास सदा हरि चेरा।
+                    कीजै नाथ हृदय मंह डेरा।।
+                </div>`
+
+
+                <div class="doha" data-doha="2">
+                    दोहा :
+
+                    पवन तनय संकट हरन, मंगल मूरति रूप।
+                    राम लखन सीता सहित, हृदय बसहु सुर भूप।।
+                </div>`
+
+               
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // header expand/collapse toggle
+        (function () {
+            const header = document.querySelector('header');
+            const toggle = document.getElementById('headerToggle');
+            const arrow = toggle ? toggle.querySelector('.toggle-arrow') : null;
+            const STORAGE_KEY = 'sundar_header_collapsed';
+
+            function applyState(collapsed) {
+                if (!header || !toggle || !arrow) return;
+                if (collapsed) {
+                    header.classList.add('collapsed');
+                    document.body.classList.add('header-collapsed');
+                    arrow.textContent = '▲'; // up arrow when collapsed (to show)
+                    toggle.setAttribute('title', 'Show header');
+                    toggle.setAttribute('aria-pressed', 'true');
+                } else {
+                    header.classList.remove('collapsed');
+                    document.body.classList.remove('header-collapsed');
+                    arrow.textContent = '▼'; // down arrow when expanded (to hide)
+                    toggle.setAttribute('title', 'Hide header');
+                    toggle.setAttribute('aria-pressed', 'false');
+                }
+            }
+
+            // initialize from storage
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                applyState(saved === '1');
+            } catch (e) { /* ignore */ }
+
+            if (toggle) {
+                toggle.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const isCollapsed = header.classList.contains('collapsed');
+                    applyState(!isCollapsed);
+                    try { localStorage.setItem(STORAGE_KEY, (!isCollapsed) ? '1' : '0'); } catch (e) { }
+                });
+            }
+        })();
+        // initialize elements and sync initial speed with the control
+        const speedControl = document.getElementById('speedControl');
+        const text = document.getElementById('scrollText');
+        const fontSizeControl = document.getElementById('fontSizeControl');
+        const colorControl = document.getElementById('colorControl');
+        const toggleScrollBtn = document.getElementById('toggleScroll');
+        const toggleIcon = document.getElementById('toggleIcon');
+        const container = document.querySelector('.container');
+        // start text just below the visible viewport of the scrolling area
+        let scrollPos = container.clientHeight;
+        // speed is pixels per second
+        const savedSpeed = localStorage.getItem('sundar_speed');
+        // parse saved speed safely and fallback to control default (80)
+        let speed = 80;
+        if (savedSpeed !== null) {
+            const p = parseFloat(savedSpeed);
+            if (!isNaN(p) && p > 0) speed = Math.max(1, p);
+        } else if (speedControl) {
+            const p = parseFloat(speedControl.value);
+            if (!isNaN(p) && p > 0) speed = p;
+        }
+        // ensure control reflects the actual speed (if present)
+        if (speedControl) speedControl.value = speed;
+        let isRunning = true;
+        let rafId = null;
+
+        // --- color initialization / persistence ---
+        // helper: convert "rgb(r, g, b)" or "rgba(...)" to hex "#rrggbb"
+        function rgbStringToHex(colorStr) {
+            if (!colorStr) return null;
+            // already hex
+            if (colorStr[0] === '#') return colorStr;
+
+            // try direct rgb(a) parse
+            let m = colorStr.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+            if (!m) {
+                // handle named colors or other css formats by resolving via a temporary element
+                try {
+                    const tmp = document.createElement('div');
+                    tmp.style.color = colorStr;
+                    tmp.style.display = 'none';
+                    document.body.appendChild(tmp);
+                    const cs = window.getComputedStyle(tmp).color;
+                    m = cs && cs.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+                    document.body.removeChild(tmp);
+                } catch (e) {
+                    m = null;
+                }
+            }
+
+            if (!m) return null;
+            const r = parseInt(m[1], 10);
+            const g = parseInt(m[2], 10);
+            const b = parseInt(m[3], 10);
+            const toHex = (v) => ('0' + v.toString(16)).slice(-2);
+            return '#' + toHex(r) + toHex(g) + toHex(b);
+        }
+
+        // initialize toggle-only color buttons and persisted state (bhagwa-bg / white-bg)
+        window.addEventListener('load', function () {
+            const BHAGWA = '#FF6F00';
+            const WHITE = '#ffffff';
+
+            function applyColorState(state) {
+                const viewport = document.querySelector('.scroll-viewport');
+                if (!viewport || !text) return;
+
+                // apply to scrolling viewport and whole page (header stays fixed)
+                if (state === 'white-bg') {
+                    viewport.style.backgroundColor = WHITE;
+                    document.body.style.backgroundColor = WHITE;
+                    text.style.color = BHAGWA;
+                } else {
+                    viewport.style.backgroundColor = BHAGWA;
+                    document.body.style.backgroundColor = BHAGWA;
+                    text.style.color = WHITE;
+                }
+
+                const desktopBtn = document.getElementById('colorControl');
+                const mobileBtn = document.getElementById('colorControl_mobile');
+                if (desktopBtn) desktopBtn.style.backgroundColor = (state === 'white-bg') ? BHAGWA : WHITE;
+                if (mobileBtn) mobileBtn.style.backgroundColor = (state === 'white-bg') ? BHAGWA : WHITE;
+
+                try { localStorage.setItem('sundar_color_state', state); } catch (e) { /* ignore */ }
+            }
+
+            function toggleColorState() {
+                const cur = localStorage.getItem('sundar_color_state') || 'bhagwa-bg';
+                const next = (cur === 'white-bg') ? 'bhagwa-bg' : 'white-bg';
+                applyColorState(next);
+            }
+
+            // apply saved state (default: bhagwa-bg => bhagwa background with white text)
+            const saved = localStorage.getItem('sundar_color_state') || 'bhagwa-bg';
+            applyColorState(saved);
+
+            // wire up toggle buttons (desktop + mobile)
+            const desktopBtn = document.getElementById('colorControl');
+            const mobileBtn = document.getElementById('colorControl_mobile');
+            if (desktopBtn) desktopBtn.addEventListener('click', function (e) { e.preventDefault(); toggleColorState(); });
+            if (mobileBtn) mobileBtn.addEventListener('click', function (e) { e.preventDefault(); toggleColorState(); });
+        });
+
+        // update speed and persist
+        speedControl.addEventListener('input', function () {
+            speed = parseFloat(this.value) || 0.1;
+            localStorage.setItem('sundar_speed', speed);
+        });
+
+        // if mobile control exists, keep it in sync when desktop changes
+        const speedMobileInit = document.getElementById('speedControl_mobile');
+        if (speedMobileInit && speedControl) {
+            speedMobileInit.value = speedControl.value;
+            speedControl.addEventListener('input', function () {
+                speedMobileInit.value = speedControl.value;
+            });
+        }
+
+        // font size control
+        fontSizeControl.addEventListener('input', function () {
+            text.style.fontSize = this.value + 'px';
+        });
+
+        // colorControl is now a toggle button; handled during load initialization
+
+        // Mobile controls: map mobile inputs to main controls so JS logic stays centralized
+        function mapMobileControls() {
+            const speedMobile = document.getElementById('speedControl_mobile');
+            const fontMobile = document.getElementById('fontSizeControl_mobile');
+            const colorMobile = document.getElementById('colorControl_mobile');
+            const toggleMobile = document.getElementById('toggleScroll_mobile');
+
+            if (speedMobile) {
+                // initialize mobile from main
+                speedMobile.value = speedControl.value;
+                speedMobile.addEventListener('input', function () {
+                    speedControl.value = this.value;
+                    speedControl.dispatchEvent(new Event('input'));
+                });
+            }
+
+            if (fontMobile) {
+                fontMobile.value = fontSizeControl.value;
+                fontMobile.addEventListener('input', function () {
+                    fontSizeControl.value = this.value;
+                    fontSizeControl.dispatchEvent(new Event('input'));
+                });
+            }
+
+            if (colorMobile) {
+                colorMobile.value = colorControl.value;
+                colorMobile.addEventListener('input', function () {
+                    colorControl.value = this.value;
+                    colorControl.dispatchEvent(new Event('input'));
+                });
+            }
+
+            // keep desktop -> mobile in sync as well
+            if (speedControl && speedMobile) {
+                speedControl.addEventListener('input', function () {
+                    speedMobile.value = speedControl.value;
+                });
+            }
+            if (fontSizeControl && fontMobile) {
+                fontSizeControl.addEventListener('input', function () {
+                    fontMobile.value = fontSizeControl.value;
+                });
+            }
+            if (colorControl && colorMobile) {
+                colorControl.addEventListener('input', function () {
+                    colorMobile.value = colorControl.value;
+                });
+            }
+
+            if (toggleMobile) {
+                toggleMobile.addEventListener('click', function () {
+                    // simulate click on desktop toggle so state remains consistent
+                    toggleScrollBtn.click();
+                    // sync icon in mobile button
+                    const icon = toggleMobile.querySelector('.toggle-icon');
+                    if (icon) icon.textContent = toggleIcon.textContent;
+                    // also update desktop icon
+                    if (toggleIcon) toggleIcon.textContent = toggleIcon.textContent;
+                });
+            }
+        }
+
+        // run mapping after DOM ready
+        mapMobileControls();
+
+        // attach tap handlers once so tapping toggles play/pause on mobile
+        container.addEventListener('touchstart', onTapStart, { passive: true });
+        container.addEventListener('touchend', onTapEnd, { passive: true });
+
+        // manual scroll handling when paused (wheel + touch)
+        function clampScrollPos(val) {
+            const min = -text.offsetHeight;
+            const max = container.clientHeight;
+            return Math.max(min, Math.min(max, val));
+        }
+
+        function updateTransform() {
+            text.style.transform = `translateY(${scrollPos}px)`;
+        }
+
+        // wheel handler (use preventDefault to stop page scroll)
+        function onWheel(e) {
+            e.preventDefault();
+            // deltaY positive means user scrolls down -> move content up
+            scrollPos = clampScrollPos(scrollPos - e.deltaY);
+            updateTransform();
+        }
+
+        // touch handlers for mobile manual scroll
+        let touchStartY = null;
+        // flag used to avoid treating swipes as taps
+        let movedDuringTouch = false;
+        // variables for tap detection
+        let tapStartX = 0, tapStartY = 0, tapStartTime = 0;
+
+        function onTouchStart(e) {
+            if (!e.touches || e.touches.length === 0) return;
+            touchStartY = e.touches[0].clientY;
+            // mark movement false at start
+            movedDuringTouch = false;
+        }
+        function onTouchMove(e) {
+            if (touchStartY === null) return;
+            const y = e.touches[0].clientY;
+            const delta = y - touchStartY;
+            // record that movement occurred so tap won't trigger
+            movedDuringTouch = true;
+            // prevent default to avoid page scroll
+            e.preventDefault();
+            scrollPos = clampScrollPos(scrollPos + delta);
+            touchStartY = y;
+            updateTransform();
+        }
+        function onTouchEnd() {
+            touchStartY = null;
+        }
+
+        // tap-to-toggle on mobile: detect quick tap (no/very small move) and toggle play/pause
+        function onTapStart(e) {
+            if (!e.touches || e.touches.length !== 1) return;
+            tapStartX = e.touches[0].clientX;
+            tapStartY = e.touches[0].clientY;
+            tapStartTime = Date.now();
+            movedDuringTouch = false;
+        }
+
+        function onTapEnd(e) {
+            const dt = Date.now() - tapStartTime;
+            // if short tap and no movement and on a narrow screen treat as toggle
+            if (dt < 300 && !movedDuringTouch && window.innerWidth <= 768) {
+                // simulate the toggle button click to keep state and icons consistent
+                if (toggleScrollBtn) toggleScrollBtn.click();
+                // update mobile icon if present
+                const toggleMobileBtn = document.getElementById('toggleScroll_mobile');
+                if (toggleMobileBtn) {
+                    const icon = toggleMobileBtn.querySelector('.toggle-icon');
+                    if (icon && toggleIcon) icon.textContent = toggleIcon.textContent;
+                }
+            }
+        }
+
+        function enableManualScroll() {
+            // attach wheel and touch listeners to allow manual control
+            container.addEventListener('wheel', onWheel, { passive: false });
+            container.addEventListener('touchstart', onTouchStart, { passive: false });
+            container.addEventListener('touchmove', onTouchMove, { passive: false });
+            container.addEventListener('touchend', onTouchEnd, { passive: true });
+            // show pointer cursor when paused
+            toggleScrollBtn.classList.add('paused');
+        }
+
+        function disableManualScroll() {
+            container.removeEventListener('wheel', onWheel);
+            container.removeEventListener('touchstart', onTouchStart);
+            container.removeEventListener('touchmove', onTouchMove);
+            container.removeEventListener('touchend', onTouchEnd);
+            toggleScrollBtn.classList.remove('paused');
+        }
+
+        // toggle scrolling using icon (play ▶ / pause ⏸)
+        if (toggleIcon) toggleIcon.textContent = isRunning ? '⏸' : '▶';
+        // when starting, ensure manual handlers are disabled
+        disableManualScroll();
+        toggleScrollBtn.addEventListener('click', function () {
+            if (isRunning) {
+                // pause
+                isRunning = false;
+                if (rafId) {
+                    cancelAnimationFrame(rafId);
+                    rafId = null;
+                }
+                if (toggleIcon) toggleIcon.textContent = '▶';
+                enableManualScroll();
+            } else {
+                // play
+                isRunning = true;
+                disableManualScroll();
+                // reset timing to avoid large delta after pause
+                lastTimestamp = null;
+                if (!rafId) rafId = requestAnimationFrame(scrollUp);
+                if (toggleIcon) toggleIcon.textContent = '⏸';
+            }
+        });
+        // time-based scroll loop (speed: px/sec)
+        let lastTimestamp = null;
+        function scrollUp(ts) {
+            rafId = null; // clear previous id now running
+            if (!isRunning) return;
+            if (!lastTimestamp) lastTimestamp = ts;
+            const delta = (ts - lastTimestamp) / 1000; // seconds
+            lastTimestamp = ts;
+
+            scrollPos -= speed * delta;
+            if (scrollPos + text.offsetHeight < 0) {
+                scrollPos = container.clientHeight;
+            }
+            text.style.transform = `translateY(${scrollPos}px)`;
+
+            // update doha input while scrolling (throttle to animation frames)
+            try { updateCurrentDoha(); } catch (e) { /* ignore */ }
+
+            rafId = requestAnimationFrame(scrollUp);
+        }
+
+        // start animation after fonts/layout stabilizes
+        rafId = requestAnimationFrame(scrollUp);
+
+        // --- Doha index and jump support ---
+        let dohaIndex = {};
+        let dohaNodes = []; // ordered NodeList -> Array
+
+        function buildDohaIndex() {
+            const index = {};
+            const nodes = Array.from(document.querySelectorAll('#scrollText .doha'));
+            dohaNodes = nodes;
+            nodes.forEach((el, i) => {
+                const key = el.getAttribute('data-doha') || String(i + 1);
+                if (!index[key]) index[key] = el;
+            });
+            return index;
+        }
+
+        function jumpToDoha(n) {
+            if (!n) return;
+            // ensure index is fresh
+            try { dohaIndex = buildDohaIndex(); } catch (e) { /* ignore */ }
+            const num = parseInt(String(n).trim(), 10);
+            if (isNaN(num)) return;
+            const key = String(num);
+            let el = dohaIndex[key] || document.querySelector('#scrollText .doha[data-doha="' + key + '"]');
+            if (!el) {
+                alert('Doha ' + n + ' not found');
+                return;
+            }
+
+            // compute element position inside the scrolling content using offsetTop
+            // visualTop = scrollPos + el.offsetTop; we want visualTop ~= center of container
+            const elOffset = el.offsetTop;
+            const elHeight = el.offsetHeight || 0;
+            const desiredVisualTop = Math.round(container.clientHeight / 2 - elHeight / 2);
+            const desiredScrollPos = desiredVisualTop - elOffset;
+            scrollPos = clampScrollPos(desiredScrollPos);
+            // apply immediately
+            updateTransform();
+            // update inputs to reflect new current doha
+            updateCurrentDoha();
+        }
+
+        // build index when DOM is ready
+        window.addEventListener('load', function () {
+            try { dohaIndex = buildDohaIndex(); } catch (e) { /* ignore */ }
+        });
+
+        // update the doha input fields with the doha currently centered in the viewport
+        function updateCurrentDoha() {
+            if (!dohaNodes || dohaNodes.length === 0) return;
+            // compute center line within container
+            const centerY = -scrollPos + (container.clientHeight / 2);
+            let foundKey = null;
+            for (let i = 0; i < dohaNodes.length; i++) {
+                const el = dohaNodes[i];
+                const top = el.offsetTop;
+                const bottom = top + el.offsetHeight;
+                if (centerY >= top && centerY <= bottom) {
+                    foundKey = el.getAttribute('data-doha') || String(i + 1);
+                    break;
+                }
+            }
+            if (!foundKey) {
+                // fallback: nearest element by distance to center
+                let best = { key: null, dist: Infinity };
+                for (let i = 0; i < dohaNodes.length; i++) {
+                    const el = dohaNodes[i];
+                    const centerEl = el.offsetTop + (el.offsetHeight / 2);
+                    const d = Math.abs(centerY - centerEl);
+                    if (d < best.dist) best = { key: el.getAttribute('data-doha') || String(i + 1), dist: d };
+                }
+                foundKey = best.key;
+            }
+
+            if (foundKey) {
+                const desktopInput = document.getElementById('dohaInput');
+                const mobileInput = document.getElementById('dohaInput_mobile');
+                if (desktopInput) desktopInput.value = foundKey;
+                if (mobileInput) mobileInput.value = foundKey;
+            }
+        }
+
+
+
+        // wire up controls
+        const dohaInput = document.getElementById('dohaInput');
+        const dohaGoBtn = document.getElementById('dohaGoBtn');
+        const dohaInputMobile = document.getElementById('dohaInput_mobile');
+        const dohaGoBtnMobile = document.getElementById('dohaGoBtn_mobile');
+
+        if (dohaGoBtn && dohaInput) {
+            dohaGoBtn.addEventListener('click', function () {
+                jumpToDoha(dohaInput.value);
+            });
+            dohaInput.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') jumpToDoha(this.value);
+            });
+        }
+
+        if (dohaGoBtnMobile && dohaInputMobile) {
+            dohaGoBtnMobile.addEventListener('click', function () {
+                if (dohaInput) dohaInput.value = dohaInputMobile.value;
+                jumpToDoha(dohaInputMobile.value);
+            });
+            dohaInputMobile.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    if (dohaInput) dohaInput.value = this.value;
+                    jumpToDoha(this.value);
+                }
+            });
+        }
+    </script>
+
+    <!-- Bootstrap JS bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
