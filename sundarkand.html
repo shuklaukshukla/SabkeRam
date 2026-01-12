@@ -1572,8 +1572,8 @@
         const toggleScrollBtn = document.getElementById('toggleScroll');
         const toggleIcon = document.getElementById('toggleIcon');
         const container = document.querySelector('.container');
-        // start text just below the visible viewport of the scrolling area
-        let scrollPos = container.clientHeight;
+// start with content filling the viewport (show text) instead of auto-scrolling off-screen
+let scrollPos = 0;
         // speed is pixels per second
         const savedSpeed = localStorage.getItem('sundar_speed');
         // parse saved speed safely and fallback to control default (80)
@@ -1587,8 +1587,9 @@
         }
         // ensure control reflects the actual speed (if present)
         if (speedControl) speedControl.value = speed;
-        let isRunning = true;
-        let rafId = null;
+// start paused by default (auto-scroll OFF)
+let isRunning = false;
+let rafId = null;
 
         // --- color initialization / persistence ---
         // helper: convert "rgb(r, g, b)" or "rgba(...)" to hex "#rrggbb"
@@ -1775,6 +1776,7 @@
             // deltaY positive means user scrolls down -> move content up
             scrollPos = clampScrollPos(scrollPos - e.deltaY);
             updateTransform();
+            try { updateCurrentDoha(); } catch (err) { /* ignore */ }
         }
 
         // touch handlers for mobile manual scroll
@@ -1801,9 +1803,11 @@
             scrollPos = clampScrollPos(scrollPos + delta);
             touchStartY = y;
             updateTransform();
+            try { updateCurrentDoha(); } catch (err) { /* ignore */ }
         }
         function onTouchEnd() {
             touchStartY = null;
+            try { updateCurrentDoha(); } catch (err) { /* ignore */ }
         }
 
         // tap-to-toggle on mobile: detect quick tap (no/very small move) and toggle play/pause
@@ -1850,8 +1854,14 @@
 
         // toggle scrolling using icon (play ▶ / pause ⏸)
         if (toggleIcon) toggleIcon.textContent = isRunning ? '⏸' : '▶';
-        // when starting, ensure manual handlers are disabled
-        disableManualScroll();
+// ensure manual handlers match initial paused state
+if (isRunning) {
+    // running: automatic scrolling, manual handlers disabled
+    disableManualScroll();
+} else {
+    // paused: allow manual wheel/touch control and show paused state
+    enableManualScroll();
+}
         toggleScrollBtn.addEventListener('click', function () {
             if (isRunning) {
                 // pause
@@ -1893,8 +1903,8 @@
             rafId = requestAnimationFrame(scrollUp);
         }
 
-        // start animation after fonts/layout stabilizes
-        rafId = requestAnimationFrame(scrollUp);
+// start animation after fonts/layout stabilizes only if running
+if (isRunning) rafId = requestAnimationFrame(scrollUp);
 
         // --- Doha index and jump support ---
         let dohaIndex = {};
@@ -1994,6 +2004,19 @@
             });
         }
 
+        // select input content on focus so user can type to replace existing doha number
+        function enableSelectOnFocus(input) {
+            if (!input) return;
+            input.addEventListener('focus', function () { this.select(); });
+            // if the input is already focused, prevent mouse down from clearing selection
+            // but allow normal clicks when not focused. This avoids interfering with typing.
+            input.addEventListener('mousedown', function (e) {
+                if (document.activeElement === this) e.preventDefault();
+            });
+        }
+
+        enableSelectOnFocus(dohaInput);
+
         if (dohaGoBtnMobile && dohaInputMobile) {
             dohaGoBtnMobile.addEventListener('click', function () {
                 if (dohaInput) dohaInput.value = dohaInputMobile.value;
@@ -2006,6 +2029,9 @@
                 }
             });
         }
+
+        // mobile input: also select on focus
+        enableSelectOnFocus(dohaInputMobile);
     </script>
 
     <!-- Bootstrap JS bundle -->
